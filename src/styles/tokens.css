@@ -21,20 +21,43 @@
   --ember: #c2410c;
   --amber-glow: rgba(255, 140, 26, 0.14);
 
-  /* Type stacks — real display/mono fonts load in Milestone 2. */
-  --font-display: 'Clash Display', 'Inter', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+  /* Type stacks. Fallbacks are metric-matched in fonts.css — no shift on swap. */
+  --font-display: 'Clash Display', 'Clash Display Fallback', system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter Fallback', system-ui, sans-serif;
+  --font-mono:
+    'JetBrains Mono Variable', 'JetBrains Mono Fallback', ui-monospace, 'SF Mono', monospace;
 
-  /* Fluid type scale (placeholder rhythm; tuned in Milestone 2). */
-  --text-xs: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem);
-  --text-sm: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
-  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  --text-lg: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
-  --text-xl: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
-  --text-display: clamp(2.5rem, 1.5rem + 5vw, 6rem);
+  /*
+   * Fluid type scale — clamp() between a 390px and 1440px viewport.
+   * Steps: 11→12 · 13→15 · 16→18 · 19→24 · 24→36 · 32→56 · 44→112.
+   */
+  --text-xs: clamp(0.6875rem, 0.6644rem + 0.0952vw, 0.75rem);
+  --text-sm: clamp(0.8125rem, 0.766rem + 0.1905vw, 0.9375rem);
+  --text-base: clamp(1rem, 0.9535rem + 0.1905vw, 1.125rem);
+  --text-lg: clamp(1.1875rem, 1.0712rem + 0.4762vw, 1.5rem);
+  --text-xl: clamp(1.5rem, 1.2209rem + 1.1429vw, 2.25rem);
+  --text-2xl: clamp(2rem, 1.4419rem + 2.2857vw, 3.5rem);
+  --text-display: clamp(2.75rem, 1.1686rem + 6.4762vw, 7rem);
 
-  /* Spacing rhythm */
-  --space-section: clamp(6rem, 4rem + 10vw, 12rem);
-  --space-gutter: clamp(1.25rem, 4vw, 4rem);
+  /* Tracking + leading, per role. Display tightens; mono labels open up. */
+  --track-display: -0.02em;
+  --track-tight: -0.01em;
+  --track-mono: 0.14em;
+  --leading-display: 1.02;
+  --leading-tight: 1.15;
+  --leading-body: 1.6;
+
+  /* Spacing rhythm — 8px baseline ladder + fluid section/gutter. */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-6: 3rem;
+  --space-8: 4rem;
+  --space-12: 6rem;
+  --space-section: clamp(7rem, 5rem + 10vw, 12rem);
+  --space-gutter: clamp(1.25rem, 4vw, 4.5rem);
+
+  /* Chrome */
+  --nav-height: 4rem;
 }

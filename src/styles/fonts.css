@@ -1,0 +1,47 @@
+/*
+ * Font faces. Inter + JetBrains Mono are self-hosted via @fontsource-variable
+ * (imported in main.tsx); Clash Display is self-hosted from public/fonts
+ * (Fontshare, ITF Free Font License — see public/fonts/ClashDisplay-LICENSE.txt).
+ *
+ * The *-Fallback faces are metric-matched system fonts (fontaine-style
+ * overrides, computed with fontkit against the actual font files) so the
+ * swap from fallback → web font causes no layout shift.
+ */
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Variable.woff2') format('woff2');
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* size-adjust calibrated against canvas-measured widths of the site's real
+   heading strings at weight 600 (they cluster at ~1.02× Arial), not the
+   font-wide glyph average — the variable font's default instance skews that. */
+@font-face {
+  font-family: 'Clash Display Fallback';
+  src: local('Arial');
+  size-adjust: 102%;
+  ascent-override: 87.25%;
+  descent-override: 24.51%;
+  line-gap-override: 8.82%;
+}
+
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107.89%;
+  ascent-override: 89.79%;
+  descent-override: 22.36%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono Fallback';
+  src: local('Courier New');
+  size-adjust: 99.98%;
+  ascent-override: 102.02%;
+  descent-override: 30%;
+  line-gap-override: 0%;
+}
