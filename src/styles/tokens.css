@@ -1,0 +1,40 @@
+/*
+ * Design tokens — source of truth for the DOM side.
+ * Mirrored in src/theme/tokens.ts for the 3D scene; the two files must not drift.
+ */
+:root {
+  /* Surfaces */
+  --bg-void: #0a0a0b;
+  --bg-surface: #141417;
+  --bg-elevated: #1b1b1f;
+  --line: #26262b;
+
+  /* Text */
+  --text-hi: #edede6;
+  --text-mid: #a5a59c;
+  --text-low: #6e6e67;
+
+  /* Amber — signal colour only. ~10% of the page, never more. */
+  --amber: #ff8c1a;
+  --amber-hot: #ffb84d;
+  --amber-white: #ffe7c2;
+  --ember: #c2410c;
+  --amber-glow: rgba(255, 140, 26, 0.14);
+
+  /* Type stacks — real display/mono fonts load in Milestone 2. */
+  --font-display: 'Clash Display', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* Fluid type scale (placeholder rhythm; tuned in Milestone 2). */
+  --text-xs: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem);
+  --text-sm: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-lg: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-xl: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+  --text-display: clamp(2.5rem, 1.5rem + 5vw, 6rem);
+
+  /* Spacing rhythm */
+  --space-section: clamp(6rem, 4rem + 10vw, 12rem);
+  --space-gutter: clamp(1.25rem, 4vw, 4rem);
+}
