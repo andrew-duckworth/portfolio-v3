@@ -140,6 +140,158 @@ main {
   will-change: transform;
 }
 
+/* --- About ------------------------------------------------------------- */
+
+.about__thesis {
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
+  color: var(--text-hi);
+  max-width: 24em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+}
+
+.about__line {
+  display: block;
+  will-change: clip-path;
+}
+
+.about__keyword {
+  font-style: normal;
+  color: var(--amber);
+  /* Keep the keyword on one row so the underline draws as a single stroke
+     instead of fragmenting across a line break. */
+  white-space: nowrap;
+  /* Underline is a background gradient so the draw is a background-size
+     tween — cheaper and simpler than a positioned pseudo-element. */
+  background-image: linear-gradient(var(--amber), var(--amber));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 2px;
+}
+
+/* Initial clipped/undrawn state lives behind the motion preference, so
+   reduced-motion readers never depend on JS to make the copy visible. */
+@media (prefers-reduced-motion: no-preference) {
+  .about__line {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  .about__keyword {
+    background-size: 0% 2px;
+  }
+}
+
+/* --- Featured Work ------------------------------------------------------ */
+
+/* Default layout is the vertical stack (mobile + reduced motion + no-JS);
+   JS upgrades to the pinned horizontal track by adding .work--horizontal. */
+.work__track {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 52rem;
+}
+
+.work--horizontal {
+  overflow: hidden;
+}
+
+.work--horizontal .work__track {
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--space-6);
+  max-width: none;
+  width: max-content;
+  will-change: transform;
+}
+
+.work-card {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--bg-surface);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+
+.work--horizontal .work-card {
+  width: min(62vw, 52rem);
+  flex-shrink: 0;
+  grid-template-columns: 1.05fr 1fr;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  /* Tilt-on-hover rotates the card in 3D. */
+  will-change: transform;
+}
+
+.work-card--open {
+  border-style: dashed;
+  background: transparent;
+}
+
+.work-card__preview {
+  aspect-ratio: 16 / 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+
+.work-card__num {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  line-height: 1;
+  color: var(--text-low);
+}
+
+.work-card__preview-note {
+  color: var(--text-low);
+}
+
+.work-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.work-card__title {
+  font-size: var(--text-xl);
+  color: var(--text-hi);
+}
+
+.work-card__angle {
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--text-mid);
+}
+
+/* Mono but not .mono-label — tech names keep their casing. */
+.work-card__stack {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--track-mono);
+  color: var(--text-low);
+}
+
+.work-card__meta {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  color: var(--text-low);
+}
+
 /* --- Hero shell -------------------------------------------------------- */
 
 .hero {
