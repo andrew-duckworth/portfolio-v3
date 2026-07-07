@@ -1,5 +1,21 @@
 /* Component styles: nav, section wrapper, text reveal, hero shell. */
 
+/* --- Forge canvas ------------------------------------------------------ */
+
+/* The persistent 3D layer: fixed behind everything, decorative only. */
+.forge-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* DOM content paints above the canvas. */
+main {
+  position: relative;
+  z-index: 1;
+}
+
 /* --- Nav ------------------------------------------------------------- */
 
 .nav {
