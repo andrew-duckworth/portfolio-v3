@@ -292,6 +292,198 @@ main {
   color: var(--text-low);
 }
 
+/* --- How I Build (pipeline) --------------------------------------------- */
+
+.pipeline {
+  /* Segment geometry: a constant dot offset plus the fixed list gap let each
+     SVG segment span exactly from its dot centre to the next dot centre with
+     pure CSS — no JS measurement, so the draw survives resize/font-swap. */
+  --pipeline-dot: 0.75rem;
+  --pipeline-dot-top: 0.4rem;
+  --pipeline-gap: var(--space-6);
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pipeline-gap);
+  max-width: 40rem;
+}
+
+.pipeline__step {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--pipeline-dot) 1fr;
+  column-gap: var(--space-3);
+}
+
+/* Lit state is the default so reduced-motion (and no-JS) readers get the
+   finished pipeline; the unlit initial state is gated below. */
+.pipeline__node {
+  position: relative;
+  z-index: 1; /* sits on the rail; the void background masks it beneath */
+  width: var(--pipeline-dot);
+  height: var(--pipeline-dot);
+  margin-top: var(--pipeline-dot-top);
+  border-radius: 50%;
+  background: var(--amber);
+  border: 1px solid var(--amber-hot);
+  box-shadow: 0 0 16px 3px var(--amber-glow);
+}
+
+.pipeline__seg {
+  position: absolute;
+  left: calc(var(--pipeline-dot) / 2 - 1px);
+  top: calc(var(--pipeline-dot-top) + var(--pipeline-dot) / 2);
+  width: 2px;
+  /* Dot centre to next dot centre: the rest of this row plus the list gap. */
+  height: calc(100% + var(--pipeline-gap));
+}
+
+.pipeline__rail {
+  stroke: var(--line);
+  stroke-width: 2;
+}
+
+.pipeline__draw {
+  stroke: var(--amber);
+  stroke-width: 2;
+  /* The line is exactly 100 user units, so one dash covers it. */
+  stroke-dasharray: 100;
+}
+
+.pipeline__body {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.pipeline__title {
+  font-size: var(--text-lg);
+  color: var(--text-hi);
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.pipeline__num {
+  /* Pinned so the title's light-up colour tween doesn't drag it along. */
+  color: var(--text-low);
+}
+
+.pipeline__caption {
+  color: var(--text-mid);
+  line-height: var(--leading-body);
+  max-width: 34rem;
+}
+
+/* Unlit/undrawn initial states live behind the motion preference (About
+   pattern) so reduced-motion readers never depend on JS for the lit state.
+   The scrubbed timeline lights nodes and draws the rail from here. */
+@media (prefers-reduced-motion: no-preference) {
+  .pipeline__node {
+    background: var(--bg-void);
+    border-color: var(--line);
+    box-shadow: 0 0 0 0 rgba(255, 140, 26, 0);
+  }
+
+  .pipeline__title {
+    color: var(--text-low);
+  }
+
+  .pipeline__caption {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+
+  .pipeline__draw {
+    stroke-dashoffset: 100;
+  }
+}
+
+/* --- Stack --------------------------------------------------------------- */
+
+/* Full-bleed band: negative margins cancel the section gutters so the
+   marquee runs edge to edge, with soft fades masking the seams. */
+.stack__marquee {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  overflow: hidden;
+  margin-inline: calc(-1 * var(--space-gutter));
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+}
+
+.stack__track {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: max-content;
+  padding-right: var(--space-4); /* keeps the wrap gap equal to the item gap */
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-2xl);
+  letter-spacing: var(--track-display);
+  line-height: 1.1;
+  will-change: transform;
+}
+
+.stack__item {
+  color: var(--text-low);
+}
+
+/* Second row is hollow type — same scale, quieter presence. */
+.stack__track--outline .stack__item {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--text-low);
+}
+
+.stack__dot {
+  width: 0.3125rem;
+  height: 0.3125rem;
+  border-radius: 50%;
+  background: var(--line);
+  flex-shrink: 0;
+}
+
+.stack__groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--space-4) var(--space-6);
+  max-width: 64rem;
+}
+
+.stack-group {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.stack-group__label {
+  color: var(--text-low);
+}
+
+.stack-group__chips {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+/* Mono but not .mono-label — tech names keep their casing. */
+.stack-chip {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  padding: 0.375rem 0.75rem;
+  color: var(--text-mid);
+  background: var(--bg-surface);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  will-change: transform;
+}
+
 /* --- Hero shell -------------------------------------------------------- */
 
 .hero {

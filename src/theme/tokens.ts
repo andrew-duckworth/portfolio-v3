@@ -15,6 +15,7 @@ export const COLORS = {
   amberHot: '#FFB84D',
   amberWhite: '#FFE7C2',
   ember: '#C2410C',
+  amberGlow: 'rgba(255, 140, 26, 0.14)',
 } as const;
 
 export type ColorToken = keyof typeof COLORS;
