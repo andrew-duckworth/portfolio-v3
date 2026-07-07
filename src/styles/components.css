@@ -484,6 +484,160 @@ main {
   will-change: transform;
 }
 
+/* --- Path (timeline) ----------------------------------------------------- */
+
+.timeline {
+  /* Node geometry shared by the rail, spine dots, and mobile collapse. */
+  --tl-dot: 0.75rem;
+  --tl-dot-top: 0.45rem;
+  position: relative;
+  max-width: 48rem;
+  /* Desktop slide-in offsets exceed the min page gutter; clip sideways travel
+     here so it reads as a masked entrance instead of a page scrollbar. */
+  overflow-x: clip;
+  padding-block: var(--space-1);
+}
+
+.timeline__rail {
+  position: absolute;
+  left: calc(50% - 1px);
+  top: calc(var(--tl-dot-top) + var(--tl-dot) / 2 + var(--space-1));
+  bottom: 0;
+  width: 2px;
+  background: var(--line);
+  /* The spine dissolves past the last entry — the path is still being drawn. */
+  -webkit-mask-image: linear-gradient(#000 78%, transparent);
+  mask-image: linear-gradient(#000 78%, transparent);
+}
+
+/* Filled state is the default so reduced-motion (and no-JS) readers get the
+   finished timeline; the empty/offset initial states are gated below. */
+.timeline__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--amber);
+  transform-origin: top center;
+  will-change: transform;
+}
+
+.timeline__list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.timeline-entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  will-change: transform;
+}
+
+.timeline-entry__node {
+  position: absolute;
+  left: 50%;
+  top: var(--tl-dot-top);
+  transform: translateX(-50%);
+  z-index: 1; /* sits on the rail */
+  width: var(--tl-dot);
+  height: var(--tl-dot);
+  border-radius: 50%;
+  background: var(--amber);
+  border: 1px solid var(--amber-hot);
+}
+
+/* Alternating halves: content hugs the spine, ragged edge faces outward. */
+.timeline-entry--left .timeline-entry__body {
+  grid-column: 1;
+  padding-right: var(--space-6);
+  text-align: right;
+}
+
+.timeline-entry--right .timeline-entry__body {
+  grid-column: 2;
+  padding-left: var(--space-6);
+}
+
+.timeline-entry__body {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.timeline-entry__title {
+  font-size: var(--text-lg);
+  color: var(--text-hi);
+}
+
+.timeline-entry__desc {
+  color: var(--text-mid);
+  line-height: var(--leading-body);
+}
+
+/* Mono but not .mono-label — employer/role names keep their casing. */
+.timeline-entry__meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--track-mono);
+  color: var(--text-low);
+}
+
+/* Empty-fill/offset/unlit initial states live behind the motion preference
+   (About pattern) so reduced-motion readers never depend on JS. The scrubbed
+   fill and per-entry slide-ins animate to identity from here. */
+@media (prefers-reduced-motion: no-preference) {
+  .timeline__fill {
+    transform: scaleY(0);
+  }
+
+  .timeline-entry {
+    opacity: 0;
+  }
+
+  .timeline-entry--left {
+    transform: translateX(-2.5rem);
+  }
+
+  .timeline-entry--right {
+    transform: translateX(2.5rem);
+  }
+
+  .timeline-entry__node {
+    background: var(--bg-void);
+    border-color: var(--line);
+  }
+}
+
+/* Narrow viewports: single column, spine on the left, no lateral travel. */
+@media (max-width: 45rem) {
+  .timeline__rail {
+    left: calc(var(--tl-dot) / 2 - 1px);
+  }
+
+  .timeline-entry {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline-entry__node {
+    left: calc(var(--tl-dot) / 2);
+  }
+
+  .timeline-entry--left .timeline-entry__body,
+  .timeline-entry--right .timeline-entry__body {
+    grid-column: 1;
+    padding: 0 0 0 calc(var(--tl-dot) + var(--space-3));
+    text-align: left;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (max-width: 45rem) {
+  .timeline-entry--left,
+  .timeline-entry--right {
+    transform: translateY(1rem);
+  }
+}
+
 /* --- Hero shell -------------------------------------------------------- */
 
 .hero {

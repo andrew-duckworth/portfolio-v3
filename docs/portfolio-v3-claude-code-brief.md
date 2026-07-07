@@ -136,7 +136,7 @@ Mouse position adds subtle parallax/rotation (damped). On hero exit the core sho
 **Stack:** TypeScript · Node.js · React · Python · LangChain.js · LangGraph · Qdrant · Ollama · Azure · Microsoft Entra · SSE. Group sensibly.
 
 **Path:**
-- *Contract Software Developer — BRANZ* — Azure-hosted backend systems; led a Microsoft Entra identity migration.
+- *Contract Software Developer/IT Technician — BRANZ* — Azure-hosted backend systems; Microsoft Entra identity migration.
 - *Dev Academy Aotearoa (2023)* — NZ Certificate in Applied Software Development, Level 6.
 - *(Optional earlier entry / "now" entry.)*
 
