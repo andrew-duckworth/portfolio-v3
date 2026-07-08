@@ -20,15 +20,17 @@ export function Hero() {
       if (prefersReducedMotion()) {
         const canvasLayer = document.querySelector('.forge-canvas');
         if (canvasLayer) {
-          gsap.to(canvasLayer, {
-            autoAlpha: 0.15,
-            duration: 0.6,
-            ease: 'power1.out',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'bottom 65%',
-              toggleActions: 'play none none reverse',
-            },
+          // Contact fades the same layer back up for its finale, so this must
+          // be callback-style with explicit targets + overwrite — a reversing
+          // toggleActions tween would restore whatever pre-tween value it
+          // happened to record while the other section's fade was mid-flight.
+          const fadeTo = (autoAlpha: number) =>
+            gsap.to(canvasLayer, { autoAlpha, duration: 0.6, ease: 'power1.out', overwrite: 'auto' });
+          ScrollTrigger.create({
+            trigger: sectionRef.current,
+            start: 'bottom 65%',
+            onEnter: () => fadeTo(0.15),
+            onLeaveBack: () => fadeTo(1),
           });
         }
         return;

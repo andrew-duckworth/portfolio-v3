@@ -6,6 +6,7 @@
 export const forgeCoreVertex = /* glsl */ `
 uniform float uTime;
 uniform float uProgress;
+uniform float uFlare;
 uniform vec2 uMouse;
 uniform float uPixelRatio;
 uniform float uSize;
@@ -121,18 +122,29 @@ void main() {
   float rise = smoothstep(0.0, 0.5, p);
   float scatter = smoothstep(0.35, 1.0, p);
 
+  // Contact finale (§5.7): one envelope, two staged responses. The first
+  // ~60% of uFlare re-condenses — it scales dispersion back down, so the
+  // particles return along the same radial paths they scattered on — and
+  // the top of the envelope spikes the core heat. At uFlare = 0 every term
+  // below is identity, so the hero scrub keeps full authority.
+  float condense = smoothstep(0.0, 0.6, uFlare);
+  float spike = smoothstep(0.55, 1.0, uFlare);
+  scatter *= 1.0 - condense;
+
   vec3 pos = position;
 
-  // Gentle breathing at rest, handed over to turbulence as scroll begins.
-  pos += dir * sin(uTime * 0.6 + aSeed.y * 6.2831) * 0.03 * (1.0 - rise);
+  // Gentle breathing at rest, handed over to turbulence as scroll begins;
+  // the re-condensed finale core gets its breathing back.
+  pos += dir * sin(uTime * 0.6 + aSeed.y * 6.2831) * 0.03 * max(1.0 - rise, condense);
 
   // Radial stream outward into a drifting field; per-particle reach variance
   // keeps the dispersed cloud ragged instead of a scaled sphere.
   pos *= mix(1.0, 2.8 * (0.7 + 0.6 * aSeed.z), scatter);
 
   // Curl turbulence sampled at the *base* position so the field stays
-  // coherent while particles stream through it.
-  float amp = mix(0.12, 0.65, rise);
+  // coherent while particles stream through it. The finale calms it back
+  // to the resting amplitude as the core gathers.
+  float amp = mix(mix(0.12, 0.65, rise), 0.12, condense);
   float freq = mix(1.2, 1.7, rise);
   pos += curlNoise(position * freq + uTime * (0.10 + aSeed.z * 0.06)) * amp;
 
@@ -142,13 +154,18 @@ void main() {
   float coreness = 1.0 - smoothstep(0.15, 0.7, r);
   float heat = coreness * mix(1.0, 0.3, smoothstep(0.2, 0.9, p));
   heat = max(heat, step(0.97, aSeed.w) * 0.85);
+  // Finale reheat: sustain warms the gathered core to ember, the spike
+  // pushes only the innermost fraction white-hot — bounded by coreness so
+  // the peak never outshines the hero's opening core (embers, not flares).
+  heat = max(heat, coreness * (0.5 * condense + 0.6 * spike));
   // Whisper of pointer response: the side facing the cursor runs warmer.
   heat += dot(dir.xy, uMouse) * 0.04;
   vHeat = clamp(heat, 0.0, 1.0);
 
   // Hero-exit dissolve: the field recedes to a faint drift behind the page
-  // (~0.15) rather than staying loud under later sections.
-  vAlpha = mix(1.0, 0.15, smoothstep(0.55, 1.0, p)) * mix(0.3, 1.0, vHeat);
+  // (~0.15) rather than staying loud under later sections. Condense lifts
+  // the floor back so the finale core is fully present, not a ghost.
+  vAlpha = mix(mix(1.0, 0.15, smoothstep(0.55, 1.0, p)), 1.0, condense) * mix(0.3, 1.0, vHeat);
 
   vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
   gl_Position = projectionMatrix * mvPosition;

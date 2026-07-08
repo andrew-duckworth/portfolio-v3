@@ -57,6 +57,7 @@ export function ForgeCore({ profile }: { profile: QualityProfile }) {
         uniforms: {
           uTime: { value: 0 },
           uProgress: { value: 0 },
+          uFlare: { value: 0 },
           uMouse: { value: new THREE.Vector2(0, 0) },
           uPixelRatio: { value: 1 },
           uSize: { value: 14 },
@@ -87,7 +88,7 @@ export function ForgeCore({ profile }: { profile: QualityProfile }) {
   }, [profile.mouseParallax, reducedMotion]);
 
   // Smoothed copies of the shared state, lerped per frame — never React state.
-  const smoothed = useRef({ progress: 0, mouseX: 0, mouseY: 0 });
+  const smoothed = useRef({ progress: 0, flare: 0, mouseX: 0, mouseY: 0 });
 
   useFrame((state, delta) => {
     // Clamp dt so a backgrounded tab doesn't snap the lerps on return.
@@ -96,7 +97,11 @@ export function ForgeCore({ profile }: { profile: QualityProfile }) {
     // Frame-rate-independent exponential damping.
     const kScroll = 1 - Math.exp(-dt * 6);
     const kMouse = 1 - Math.exp(-dt * 3);
+    // GSAP already shapes the flare envelope; the fast constant here only
+    // decouples uniform updates from tween tick timing.
+    const kFlare = 1 - Math.exp(-dt * 10);
     s.progress += (forgeState.heroProgress - s.progress) * kScroll;
+    s.flare += (forgeState.contactFlare - s.flare) * kFlare;
     s.mouseX += (forgeState.mouse.x - s.mouseX) * kMouse;
     s.mouseY += (forgeState.mouse.y - s.mouseY) * kMouse;
 
@@ -105,13 +110,17 @@ export function ForgeCore({ profile }: { profile: QualityProfile }) {
     // time runs slow — the "gentle idle" the brief asks for.
     u.uTime.value += dt * (reducedMotion ? 0.25 : 1);
     u.uProgress.value = s.progress;
+    u.uFlare.value = s.flare;
     (u.uMouse.value as THREE.Vector2).set(s.mouseX, s.mouseY);
     u.uPixelRatio.value = state.gl.getPixelRatio();
 
     // Camera per the §4 table: slow dolly-back with an orbit that tilts in
     // the second half. Mouse adds damped parallax on top.
     const p = s.progress;
-    const dist = p < 0.5 ? lerp(3.2, 4.6, p / 0.5) : lerp(4.6, 6.5, (p - 0.5) / 0.5);
+    let dist = p < 0.5 ? lerp(3.2, 4.6, p / 0.5) : lerp(4.6, 6.5, (p - 0.5) / 0.5);
+    // Contact finale: a gentle dolly-in toward the reformed core. Weighted
+    // by the flare so it is fully inert at 0 (hero scrub untouched).
+    dist = lerp(dist, 4.2, s.flare * 0.7);
     const yaw = p * 0.7 + s.mouseX * 0.06;
     const pitch = p * 0.12 - s.mouseY * 0.04;
     state.camera.position.set(

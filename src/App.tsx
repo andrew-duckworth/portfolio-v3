@@ -1,5 +1,6 @@
 import { SmoothScroll } from './components/SmoothScroll';
 import { Nav } from './components/Nav';
+import { Footer } from './components/Footer';
 import { ForgeCanvas } from './three/ForgeCanvas';
 import { Hero } from './sections/Hero';
 import { About } from './sections/About';
@@ -26,6 +27,7 @@ export default function App() {
         <Path />
         <Contact />
       </main>
+      <Footer />
     </SmoothScroll>
   );
 }
