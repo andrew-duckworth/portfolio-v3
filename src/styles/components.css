@@ -821,12 +821,25 @@ a.contact__link:hover {
 
 .hero__kicker {
   color: var(--text-mid);
+  text-shadow:
+    0 1px 4px var(--bg-void),
+    0 0 14px var(--bg-void);
 }
 
 .hero__title {
   font-size: var(--text-display);
   line-height: var(--leading-display);
   max-width: 8.6em;
+  /* Dark halo so the headline reads over the Forge Core's hot centre at p=0.
+     Shadow colour == page background, so it vanishes over the void and only
+     shows as local dimming where text overlaps the bright core. The tight
+     layer carries edge contrast; the wide layers (stacked to build alpha,
+     since text-shadow has no spread) soften the core around the glyphs. */
+  text-shadow:
+    0 1px 4px var(--bg-void),
+    0 0 16px var(--bg-void),
+    0 0 32px var(--bg-void),
+    0 0 32px var(--bg-void);
 }
 
 .hero__cue {
@@ -839,6 +852,9 @@ a.contact__link:hover {
   align-items: center;
   gap: var(--space-1);
   color: var(--text-low);
+  text-shadow:
+    0 1px 4px var(--bg-void),
+    0 0 14px var(--bg-void);
 }
 
 /* The amber signal motif, at whisper volume: a thin line breathing downward. */
