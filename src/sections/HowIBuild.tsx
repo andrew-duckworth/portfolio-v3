@@ -14,27 +14,27 @@ const STEPS: PipelineStep[] = [
   {
     num: '01',
     title: 'Spec & scope',
-    caption: 'Tight scope, clear acceptance criteria. The spec does the steering.',
+    caption: 'Tight scope, clear acceptance criteria, written before any code. The brief does the steering.',
   },
   {
     num: '02',
-    title: 'Build with agents',
-    caption: 'Claude Code and LangGraph carry the build; I direct, review, integrate.',
+    title: 'Milestone by milestone',
+    caption: 'Each piece built, reviewed, and committed before the next begins. No one-shot builds.',
   },
   {
     num: '03',
-    title: 'Human-in-the-loop',
-    caption: 'Approval gates where the stakes are real. Judgement stays human.',
+    title: 'Plan mode where it matters',
+    caption: 'Full plan-and-approve for architecture-level decisions; lighter checks for the rest.',
   },
   {
     num: '04',
-    title: 'Ship',
-    caption: 'Small, verified releases — momentum without recklessness.',
+    title: 'Verify it myself',
+    caption: "Scroll it, break it, check it with motion off. A green test isn't the finish line.",
   },
   {
     num: '05',
-    title: 'Teach the team',
-    caption: "Write down what worked, hand it on — so the next build is everyone's.",
+    title: 'Commit and move on',
+    caption: 'Clean checkpoints mean a bad turn costs one revert, not an afternoon.',
   },
 ];
 
