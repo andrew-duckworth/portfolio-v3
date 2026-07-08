@@ -1,20 +1,37 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Section } from '../components/Section';
 import { TextReveal } from '../components/TextReveal';
 import { gsap, useGSAP, prefersReducedMotion } from '../lib/scroll';
+
+interface ProjectVideo {
+  webm: string;
+  mp4: string;
+  poster: string;
+}
+
+interface ProjectMeta {
+  /** Visible methodology label rendered before the value (e.g. the eval
+      method), so reviewers see how a metric was produced, not just numbers. */
+  label?: string;
+  text: string;
+  href?: string;
+}
 
 interface Project {
   num: string;
   title: string;
   angle: string;
   stack: string[];
-  /** Mono meta chips — placeholders are clearly marked for Andrew to fill. */
-  meta: string[];
-  previewNote: string;
+  /** Mono meta chips — remaining placeholders are clearly marked for Andrew to fill. */
+  meta: ProjectMeta[];
+  /** Looping demo clip; under reduced motion only the poster frame shows. */
+  video?: ProjectVideo;
+  previewNote?: string;
   open?: boolean;
 }
 
-// Real content from the brief (§6). Metrics and links are deliberate
+// Real content from the brief (§6). DocSense metric + repo link confirmed by
+// Andrew (2026-07-08); the remaining bracketed chips are deliberate
 // placeholders — do not invent numbers.
 const PROJECTS: Project[] = [
   {
@@ -23,8 +40,15 @@ const PROJECTS: Project[] = [
     angle:
       'A production-grade RAG pipeline — local-first, private, measurable. Evaluated against a government policy corpus with strong retrieval benchmarks.',
     stack: ['LangChain.js', 'Qdrant', 'nomic-embed-text', 'Ollama', 'React / Vite'],
-    meta: ['[ retrieval metric — tbd ]', '[ repo / live link — tbd ]'],
-    previewNote: '[ preview — tbd ]',
+    meta: [
+      { label: 'LLM-as-judge', text: '14/15 pass · 4.80/5 avg' },
+      { text: 'GitHub repo', href: 'https://github.com/andrew-duckworth/docsense' },
+    ],
+    video: {
+      webm: '/media/docsense-demo.webm',
+      mp4: '/media/docsense-demo.mp4',
+      poster: '/media/docsense-poster.jpg',
+    },
   },
   {
     num: '02',
@@ -38,7 +62,7 @@ const PROJECTS: Project[] = [
       'SSE streaming',
       'Audit logging',
     ],
-    meta: ['[ link — tbd ]'],
+    meta: [{ text: '[ link — tbd ]' }],
     previewNote: '[ preview — tbd ]',
   },
   {
@@ -46,11 +70,63 @@ const PROJECTS: Project[] = [
     title: 'Open slot',
     angle: 'A third build lands here — an internal tool or automation that shows breadth.',
     stack: [],
-    meta: ['[ reserved ]'],
+    meta: [{ text: '[ reserved ]' }],
     previewNote: '[ reserved ]',
     open: true,
   },
 ];
+
+/**
+ * Decorative looping demo clip inside a card preview. `preload="none"` means
+ * only the poster fetches up front; an IntersectionObserver starts playback
+ * (and with it the video fetch) as the card nears the viewport, and pauses it
+ * again off-screen. The observer sees through the horizontal track's
+ * transform, and the video sits inside the preview box, so the reveal-wipe
+ * clip-path and hover tilt apply to it like any other preview content.
+ */
+function PreviewVideo({ webm, mp4, poster }: ProjectVideo) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return; // reduced motion — static poster <img> instead
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            // Rejection (autoplay policy, low-power mode) just leaves the
+            // poster up — don't let it surface as a console warning.
+            video.play().catch(() => undefined);
+          } else {
+            video.pause();
+          }
+        }
+      },
+      { rootMargin: '200px' },
+    );
+    io.observe(video);
+    return () => io.disconnect();
+  }, []);
+
+  if (prefersReducedMotion()) {
+    return <img className="work-card__preview-media" src={poster} alt="" loading="lazy" />;
+  }
+  return (
+    <video
+      ref={videoRef}
+      className="work-card__preview-media"
+      muted
+      loop
+      playsInline
+      preload="none"
+      poster={poster}
+      disablePictureInPicture
+    >
+      <source src={webm} type="video/webm" />
+      <source src={mp4} type="video/mp4" />
+    </video>
+  );
+}
 
 /**
  * Featured Work — the site's one horizontal moment. The section pins and a
@@ -186,8 +262,19 @@ export function FeaturedWork() {
         {PROJECTS.map((p) => (
           <li key={p.title} className={p.open ? 'work-card work-card--open' : 'work-card'}>
             <div className="work-card__preview" aria-hidden="true">
-              <span className="work-card__num">{p.num}</span>
-              <span className="work-card__preview-note mono-label">{p.previewNote}</span>
+              {p.video ? (
+                <>
+                  <PreviewVideo {...p.video} />
+                  <span className="work-card__num work-card__num--overlay mono-label">
+                    {p.num}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="work-card__num">{p.num}</span>
+                  <span className="work-card__preview-note mono-label">{p.previewNote}</span>
+                </>
+              )}
             </div>
             <div className="work-card__body">
               <h3 className="work-card__title">{p.title}</h3>
@@ -197,7 +284,21 @@ export function FeaturedWork() {
               )}
               <ul className="work-card__meta mono-label">
                 {p.meta.map((m) => (
-                  <li key={m}>{m}</li>
+                  <li key={m.text}>
+                    {m.label && <span className="work-card__meta-label">{m.label}</span>}
+                    {m.href ? (
+                      <a
+                        className="work-card__meta-link"
+                        href={m.href}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {m.text}
+                      </a>
+                    ) : (
+                      <span>{m.text}</span>
+                    )}
+                  </li>
                 ))}
               </ul>
             </div>

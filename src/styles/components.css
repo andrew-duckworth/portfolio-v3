@@ -235,6 +235,8 @@ main {
 }
 
 .work-card__preview {
+  position: relative;
+  overflow: hidden;
   aspect-ratio: 16 / 10;
   display: flex;
   flex-direction: column;
@@ -246,11 +248,34 @@ main {
   border-radius: 2px;
 }
 
+/* Looping demo clip (or its poster, under reduced motion) fills the box. */
+.work-card__preview-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .work-card__num {
   font-family: var(--font-display);
   font-size: var(--text-2xl);
   line-height: 1;
   color: var(--text-low);
+}
+
+/* Cards with a live preview keep their number as a small corner tag so the
+   01/02/03 sequence still reads across the track. */
+.work-card__num--overlay {
+  position: absolute;
+  top: var(--space-1);
+  left: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-hi);
+  padding: 0.2em 0.55em;
+  background: color-mix(in srgb, var(--bg-void) 65%, transparent);
+  border-radius: 2px;
 }
 
 .work-card__preview-note {
@@ -290,6 +315,29 @@ main {
   flex-wrap: wrap;
   gap: var(--space-1) var(--space-2);
   color: var(--text-low);
+}
+
+.work-card__meta li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+}
+
+/* Methodology label stays low; whatever follows it (the metric itself)
+   reads a step brighter, so the method and the number scan as one unit. */
+.work-card__meta-label + * {
+  color: var(--text-mid);
+}
+
+.work-card__meta-link {
+  color: var(--text-mid);
+  border-bottom: 1px solid var(--line);
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+a.work-card__meta-link:hover {
+  color: var(--text-hi);
+  border-color: currentColor;
 }
 
 /* --- How I Build (pipeline) --------------------------------------------- */
