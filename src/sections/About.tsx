@@ -82,13 +82,13 @@ export function About() {
           <em className="about__keyword">agentic engineering</em>.
         </span>
         <span className="about__line">
-          Builds retrieval and multi-agent systems end to end&nbsp;&mdash;
+          I build retrieval and multi-agent systems end to end,
         </span>
         <span className="about__line">
-          and, increasingly, helps the people around him build with AI too.
+          with a habit of evaluating what I build rather than just building it.
         </span>
         <span className="about__line">
-          Self-taught into the frontier via Dev Academy Aotearoa; ships fast, learns faster.
+          Self-taught into the frontier via Dev Academy Aotearoa.
         </span>
       </p>
     </Section>

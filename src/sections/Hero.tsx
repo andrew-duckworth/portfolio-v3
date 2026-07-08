@@ -66,10 +66,10 @@ export function Hero() {
   return (
     <section ref={sectionRef} id="hero" className="section hero" aria-label="Introduction">
       <TextReveal as="p" className="hero__kicker mono-label" delay={0.1}>
-        AI &amp; Agentic Engineer · Wellington, NZ
+        Full-Stack Developer · AI-Focused · Wellington, NZ
       </TextReveal>
       <TextReveal as="h1" split="chars" className="hero__title" delay={0.3}>
-        I build AI systems that ship.
+        I build AI systems.
       </TextReveal>
       <div ref={cueRef} className="hero__cue" aria-hidden="true">
         <span className="mono-label">Scroll</span>
