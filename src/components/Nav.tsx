@@ -23,9 +23,14 @@ export function Nav() {
     const el = progressRef.current;
     if (!el) return;
     // Progress is written straight to the DOM node — never React state.
+    // end must be the literal 'max': ScrollTrigger's refresh loops back and
+    // corrects string-'max' ends after pinned sections (About, Featured Work)
+    // re-apply their pin spacing. A function returning maxScroll() is
+    // evaluated mid-refresh while pins are reverted, which under-measures the
+    // page and made the ticker hit 100% several sections early.
     ScrollTrigger.create({
       start: 0,
-      end: () => ScrollTrigger.maxScroll(window),
+      end: 'max',
       onUpdate: (self) => {
         el.textContent = `${String(Math.round(self.progress * 100)).padStart(3, '0')}%`;
       },
