@@ -229,9 +229,25 @@ main {
   will-change: transform;
 }
 
-.work-card--open {
-  border-style: dashed;
+/* Earlier/bootcamp work sits a register below the flagship cards:
+   transparent surface, smaller footprint and type, muted title — present in
+   the sequence but clearly not competing with 01/02. */
+.work-card--minor {
   background: transparent;
+}
+
+.work--horizontal .work-card--minor {
+  width: min(48vw, 38rem);
+  align-self: center;
+}
+
+.work-card--minor .work-card__title {
+  font-size: var(--text-lg);
+  color: var(--text-mid);
+}
+
+.work-card--minor .work-card__angle {
+  font-size: var(--text-sm);
 }
 
 .work-card__preview {

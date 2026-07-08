@@ -27,7 +27,8 @@ interface Project {
   /** Looping demo clip; under reduced motion only the poster frame shows. */
   video?: ProjectVideo;
   previewNote?: string;
-  open?: boolean;
+  /** Earlier/bootcamp work — rendered a visual register below the flagships. */
+  minor?: boolean;
 }
 
 // Real content from the brief (§6). DocSense metric + repo link confirmed by
@@ -52,7 +53,7 @@ const PROJECTS: Project[] = [
   },
   {
     num: '02',
-    title: 'Agent Orchestration Pipeline',
+    title: 'Agent Orchestration Pipeline (WIP)',
     angle:
       'A LangGraph multi-agent system built for the enterprise concerns, not just the demo — agentic, done responsibly.',
     stack: [
@@ -67,12 +68,13 @@ const PROJECTS: Project[] = [
   },
   {
     num: '03',
-    title: 'Open slot',
-    angle: 'A third build lands here — an internal tool or automation that shows breadth.',
-    stack: [],
-    meta: [{ text: '[ reserved ]' }],
-    previewNote: '[ reserved ]',
-    open: true,
+    title: 'Earlier Work',
+    angle:
+      'A collection of full-stack projects from Dev Academy Aotearoa — the starting point for everything since.',
+    stack: ['React', 'Node.js', 'Express', 'SQLite'],
+    meta: [{ text: 'andrew-duckworth.vercel.app', href: 'https://andrew-duckworth.vercel.app/' }],
+    previewNote: 'Dev Academy Aotearoa',
+    minor: true,
   },
 ];
 
@@ -260,7 +262,7 @@ export function FeaturedWork() {
       </TextReveal>
       <ul ref={trackRef} className="work__track">
         {PROJECTS.map((p) => (
-          <li key={p.title} className={p.open ? 'work-card work-card--open' : 'work-card'}>
+          <li key={p.title} className={p.minor ? 'work-card work-card--minor' : 'work-card'}>
             <div className="work-card__preview" aria-hidden="true">
               {p.video ? (
                 <>
