@@ -44,8 +44,6 @@ export function Footer() {
           </a>
         </li>
       </ul>
-      {/* One micro-touch of the enablement thread — stated, not preached. */}
-      <p className="footer__note">Designed &amp; built AI-led</p>
     </footer>
   );
 }
